@@ -14,6 +14,10 @@ const authSchema = mongoose.Schema({
         type:String,
         require:true
     },
+    address:{
+        type:String,
+        require:true
+    },
     contact:{
         type:String,
         require:true
@@ -21,7 +25,12 @@ const authSchema = mongoose.Schema({
     History:{
         type:Array,
         default:[]
-    }
+    },
+    role:{
+        type:Boolean,
+        default:0
+    },
+
 },{timestamps:true});
 
 

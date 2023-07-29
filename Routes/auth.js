@@ -1,10 +1,10 @@
 import express  from "express";
-import { Register, login } from "../controller/auth.js";
-import formidable from "formidable"
+import { ChangePassword, Register, login } from "../controller/auth.js";
 
 const router = express.Router()
 
 router.route("/register").post(Register);
 router.route("/login").post(login);
+router.route("/changePassword").put(ChangePassword);
 
 export default router

@@ -1,6 +1,7 @@
 import express from "express";
 import { connect } from "./Database/db.js";
 import router from "./Routes/auth.js";
+import userRouter from "./Routes/user.js";
 import morgan from "morgan";
 import cors from "cors"
 import bodyParser from "body-parser";
@@ -24,6 +25,7 @@ app.use(cors());
 
 //defining router
 app.use("/auth",router)
+app.use("/user",userRouter)
 
 const PORT = process.env.PORT || "8000";
 app.listen(PORT,()=>{

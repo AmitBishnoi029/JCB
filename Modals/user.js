@@ -12,6 +12,10 @@ const userSchema = mongoose.Schema({
     phone:{
         type:String,
         require:true
+    },
+    History:{
+        type:Array,
+        default:[]
     }
 },{timestamps:true});
 
