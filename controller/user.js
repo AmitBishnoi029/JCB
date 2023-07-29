@@ -88,7 +88,7 @@ export const getHistory = async(req,resp) =>{
 }
 export const getDashboard = async(req,resp) =>{
     try {
-        const data = await Dash.findById(req.params.id);
+        const data = await Dash.findOne({});
         resp.status(200).send({success:true,data})
 
     } catch (error) {
@@ -99,9 +99,18 @@ export const getDashboard = async(req,resp) =>{
 export const OnlyJcb_deshBoard = async(req,resp) =>{
     try {
         const {jcb_price,jcb_distance} = req.body
-        await Dash.findByIdAndUpdate(req.params.id,{JCB_PRIZE:jcb_price ,DISTANCE:jcb_distance})
-        const data = await Dash.findById(req.params.id);
-        resp.status(200).send({success:true,data,message:"Data Saved"});
+        const existItem = await Dash.find({})
+        if(!existItem[0]){
+            const item = new Dash({JCB_PRIZE:jcb_price ,DISTANCE:jcb_distance})
+            const data = await item.save()
+            resp.status(200).send({success:true,data,message:"Data Saved"});
+          } else {
+            const item = await Dash.findOne({})
+            item.JCB_PRIZE=jcb_price
+            item.DISTANCE=jcb_distance
+            const data = await item.save()
+            resp.status(200).send({success:true,data,message:"Data Saved"});
+          }
 
     } catch (error) {
         console.log("Error in OnlyJcb_deshBoard",error);
@@ -111,9 +120,18 @@ export const OnlyJcb_deshBoard = async(req,resp) =>{
 export const OnlyTrolly_deshboard = async(req,resp) =>{
     try {
         const {trolly_price,trolly_distance} = req.body
-        const item = await Dash.findByIdAndUpdate(req.params.id,{DISTANCE:trolly_distance, TROLLY_PRIZE:trolly_price})
-        const data = await Dash.findById(req.params.id);
+        const existItem = await Dash.find({})
+        if(!existItem[0]){
+        const item = new Dash({DISTANCE:trolly_distance, TROLLY_PRIZE:trolly_price})
+        const data = await item.save()
+        resp.status(200).send({success:true,data,message:"Data Saved"});
+        } else {
+            const item = await Dash.findOne({})
+            item.DISTANCE=trolly_distance
+            item.TROLLY_PRIZE= trolly_price
+            const data = await item.save()
         resp.status(200).send({success:true,data,message:"Data Saved"})
+        }
 
     } catch (error) {
         console.log("Error in OnlyTrolly_deshBoard",error);
@@ -123,16 +141,29 @@ export const OnlyTrolly_deshboard = async(req,resp) =>{
 export const Combined_deshboard = async(req,resp) =>{
     try {
         const {jcb_price,trolly_price,jcb_distance,trolly_distance} = req.body
-        const item = await Dash.findById(req.params.id)
+        const existItem = await Dash.find({})
+        if(!existItem[0]){
+        const obj = new Object()
+        obj.BOTH_PRIZE.JCB_PRIZE = jcb_price
+        obj.BOTH_PRIZE.TROLLY_PRIZE=trolly_price
 
-        item.BOTH_PRIZE.JCB_PRIZE = jcb_price
-        item.BOTH_PRIZE.TROLLY_PRIZE=trolly_price
+        obj.BOTH_EXTRA_PRIZE.JCB_EXTRA_PRIZE=jcb_distance
+        obj.BOTH_EXTRA_PRIZE.TROLLY_EXTRA_PRIZE=trolly_distance
 
-        item.BOTH_EXTRA_PRIZE.JCB_EXTRA_PRIZE=jcb_distance
-        item.BOTH_EXTRA_PRIZE.TROLLY_EXTRA_PRIZE=trolly_distance
-
-        const newItem = await item.save()
-        resp.status(200).send({success:true,data:newItem,message:"Data Saved"})
+        const item = new Dash(obj)
+        const data = await item.save()
+        resp.status(200).send({success:true,data,message:"Data Saved"});
+        } else {
+            const item = await Dash.findOne({})
+            item.BOTH_PRIZE.JCB_PRIZE = jcb_price
+            item.BOTH_PRIZE.TROLLY_PRIZE=trolly_price
+    
+            item.BOTH_EXTRA_PRIZE.JCB_EXTRA_PRIZE=jcb_distance
+            item.BOTH_EXTRA_PRIZE.TROLLY_EXTRA_PRIZE=trolly_distance
+    
+            const data = await item.save()
+            resp.status(200).send({success:true,data,message:"Data Saved"})
+        }
 
     } catch (error) {
         console.log("Error in Combined_deshBoard",error);

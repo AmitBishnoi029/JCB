@@ -10,10 +10,10 @@ router.route("/bookBoth").post(BookBoth);
 router.route("/getHistory/:id").get(getHistory);
 
 //Dashboard routes
-router.route("/getDashboard/:id").get(getDashboard);
-router.route("/OnlyJcb_deshBoard/:id").put(OnlyJcb_deshBoard);
-router.route("/OnlyTrolly_deshboard/:id").put(OnlyTrolly_deshboard);
-router.route("/Combined_deshboard/:id").put(Combined_deshboard);
+router.route("/getDashboard").get(getDashboard);
+router.route("/OnlyJcb_deshBoard").post(OnlyJcb_deshBoard);
+router.route("/OnlyTrolly_deshboard").post(OnlyTrolly_deshboard);
+router.route("/Combined_deshboard").post(Combined_deshboard);
 
 
 
