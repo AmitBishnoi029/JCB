@@ -8,7 +8,6 @@ export const BookOnlyJcb = async(req,resp)=>{
 
         const history = new Object()
         let currentDate = new Date()
-        
         history.date = currentDate
         history.address = address
         history.vehicle = vehicle
@@ -30,19 +29,21 @@ export const BookOnlyTrolly = async(req,resp)=>{
     try {
         const {id,vehicle,payment,address} = req.body;
 
+        const me = await Auth.findById(id)
+
         const history = new Object()
         let currentDate = new Date()
-        
+
+        history.name = me.name
         history.date = currentDate
         history.address = address
         history.vehicle = vehicle
         history.payment = payment
-       
-        const {name,contact} = await Auth.findById(id)
         
-        const user = await new User({name,phone:contact,address})
-        user.History.push(history)
-
+        
+        const user = await new User({name:me.name,phone:me.contact,address})
+        me.History.push(history)
+        await me.save()
         await user.save()
         resp.status(200).send({success:true,message:"Book trolly Successfuly"})
     } catch (error) {
@@ -53,6 +54,8 @@ export const BookOnlyTrolly = async(req,resp)=>{
 export const BookBoth = async(req,resp)=>{
     try {
         const {id,vehicle,payment,address} = req.body;
+    
+        const me = await Auth.findById(id)
 
         const history = new Object()
         let currentDate = new Date()
@@ -61,12 +64,12 @@ export const BookBoth = async(req,resp)=>{
         history.address = address
         history.vehicle = vehicle
         history.payment = payment
-       
-        const {name,contact} = await Auth.findById(id)
+        history.name = me.name
         
-        const user = await new User({name,phone:contact,address})
-        user.History.push(history)
-
+        
+        const user = await new User({name:me.name,phone:me.contact,address})
+        me.History.push(history)
+        await me.save()
         await user.save()
         resp.status(200).send({success:true,message:"Jcb and trolly Book Successfuly"})
     } catch (error) {
@@ -77,7 +80,6 @@ export const BookBoth = async(req,resp)=>{
 
 export const getHistory = async(req,resp) =>{
     try {
-        console.log("id : ",req.params.id);
         const {History} = await Auth.findById(req.params.id);
         resp.status(201).send({success:true,History})
 
